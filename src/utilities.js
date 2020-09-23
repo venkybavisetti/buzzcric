@@ -30,27 +30,30 @@ const getMatch = (matches, matchId) =>
 const getPlayer = (team, name) =>
   team.players.find((player) => player.name === name);
 
-const getInPlayInfo = (matches, matchId) => {
+const getScoreCard = (matches, matchId) => {
   const match = getMatch(matches, matchId);
   const battingTeam = getBattingTeam(match);
   const bowlingTeam = getBowlingTeam(match);
 
-  const inPlayInfo = {};
-  inPlayInfo.scoreBoard = {
-    team: battingTeam.name,
-    inning: match.currentStatus.inning,
-    score: battingTeam.score,
-    wickets: battingTeam.wickets,
-    overs: battingTeam.balls,
+  const { inPlay, target, tossWon, hostingTeam, visitorTeam } = match;
+  const teams = {
+    hostingTeam: hostingTeam.name,
+    visitorTeam: visitorTeam.name,
   };
-  inPlayInfo.batsman = getPlayer(battingTeam, match.inPlay.batsman);
-  inPlayInfo.opponentBatsman = getPlayer(
-    battingTeam,
-    match.inPlay.opponentBatsman
-  );
-  inPlayInfo.bowler = getPlayer(bowlingTeam, match.inPlay.bowler);
-  inPlayInfo.currentOver = match.inPlay.currentOver;
-  return inPlayInfo;
+  const { name, score, wickets, balls } = battingTeam;
+  const { inning } = match.currentStatus;
+  const batsman = getPlayer(battingTeam, inPlay.batsman);
+  const opponentBatsman = getPlayer(battingTeam, inPlay.opponentBatsman);
+  const bowler = getPlayer(bowlingTeam, inPlay.bowler);
+  const { currentOver } = inPlay;
+
+  return {
+    teams,
+    scoreBoard: { team: name, inning, score, wickets, balls, target, tossWon },
+    inPlay: { batsman, opponentBatsman, bowler },
+    currentOver,
+    isMatchCompleted: match.isMatchCompleted,
+  };
 };
 
 module.exports = {
@@ -59,5 +62,5 @@ module.exports = {
   getBattingTeam,
   getBowlingTeam,
   getPlayer,
-  getInPlayInfo,
+  getScoreCard,
 };

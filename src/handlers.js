@@ -1,6 +1,6 @@
 const { setMatch, getPlayersToChoose, updateInPlay } = require('./match');
 const { updateScore } = require('./updateScore');
-const { getBattingTeamName, getInPlayInfo } = require('./utilities');
+const { getBattingTeamName, getScoreCard } = require('./utilities');
 
 const loadData = (req, res, next) => {
   req.app.locals.db.loadData().then((matches) => {
@@ -33,7 +33,7 @@ const setupMatch = (req, res) => {
 const getInPlay = function (req, res) {
   const { matchId } = req.params;
   const { matches, db } = req.app.locals;
-  const inPlayInfo = getInPlayInfo(matches, +matchId);
+  const inPlayInfo = getScoreCard(matches, +matchId);
   res.json(inPlayInfo);
 };
 

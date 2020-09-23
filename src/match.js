@@ -3,7 +3,7 @@ const {
   getBattingTeam,
   getBowlingTeam,
   getPlayer,
-  getInPlayInfo,
+  getScoreCard,
 } = require('./utilities');
 
 const getTeamInfo = (team) => {
@@ -30,9 +30,10 @@ const setMatch = ({
 }) => ({
   matchId: matchId,
   isMatchCompleted: false,
+  target: 0,
   visitorTeam: getTeamInfo(visitorTeam),
   hostingTeam: getTeamInfo(hostingTeam),
-  overs: +matchDetails.overs,
+  overs: matchDetails.overs,
   tossWon: matchDetails.toss,
   currentStatus: { battingTeam, inning: '1st' },
   inPlay: {
@@ -42,21 +43,6 @@ const setMatch = ({
     currentOver: [],
   },
 });
-
-// const data = {
-//   scoreBoard: {
-//     target: 200,
-//     team: 'Csk',
-//     inning: '1st',
-//     score: 190,
-//     wickets: 1,
-//     overs: 19.3,
-//   },
-//   batsman: null,
-//   opponentBatsman: null,
-//   bowler: null,
-//   currentOver: [1, 3, 2, 6, '2wk', 4, '2wd', '3lb', '5nb'],
-// };
 
 const getNotBattedPlayers = (players, player) => {
   if (!player.isBatted) players.push(player.name);
@@ -102,7 +88,7 @@ const updateInPlay = (matches, matchId, playersToUpdate) => {
     setPlayerBatted(match, nonStrick);
   }
   if (bowler) match.inPlay.bowler = bowler;
-  return getInPlayInfo(matches, matchId);
+  return getScoreCard(matches, matchId);
 };
 
 module.exports = {

@@ -3,7 +3,7 @@ const {
   getBattingTeam,
   getBowlingTeam,
   getPlayer,
-  getInPlayInfo,
+  getScoreCard,
 } = require('./utilities');
 
 const updateBatingTeam = (lookup, team, ball, batsmanName) => {
@@ -29,13 +29,18 @@ const updateBowlingTeam = (lookup, team, ball, bowlerName) => {
 const updateInPlayStatus = (match, ball) => {
   let { inPlay } = match;
   let bowlingTeam = getBowlingTeam(match);
-  let [runs, extras] = getBallInfo(ball);
-  inPlay.currentOver.push(ball);
-  if (extras === 'wk') inPlay.batsman = null;
   let bowler = getPlayer(bowlingTeam, inPlay.bowler);
+  let [runs, extras] = getBallInfo(ball);
+
+  inPlay.currentOver.push(ball);
+
+  if (extras === 'wk') inPlay.batsman = null;
   if (bowler.bowling.balls % 6 === 0) {
     inPlay.currentOver = [];
     inPlay.bowler = null;
+    let playerName = inPlay.batsman;
+    inPlay.batsman = inPlay.opponentBatsman;
+    inPlay.opponentBatsman = playerName;
   }
   if (+runs === 1 || +runs === 3 || ball === '1lb' || ball === '3lb') {
     let playerName = inPlay.batsman;
@@ -91,7 +96,7 @@ const updateScore = (matches, matchId, ball) => {
   updateMatchStatus(match);
   console.log(match);
 
-  return getInPlayInfo(matches, matchId);
+  return getScoreCard(matches, matchId);
 };
 
 module.exports = { updateScore };
