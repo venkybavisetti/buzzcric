@@ -24,7 +24,7 @@ const setupMatch = (req, res) => {
     matchId: matches.length,
   });
 
-  matches.push(match);
+  matches.unshift(match);
   db.saveData(matches).then(
     (status) => status && res.end(JSON.stringify(match.matchId))
   );

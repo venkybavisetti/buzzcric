@@ -51,15 +51,13 @@ const updateInPlayStatus = (match, ball) => {
 
 const getBallInfo = (ball) => [ball[0], ball.slice(1)];
 
-const updateMatchStatus = (match) => {
+const updateInningStatus = (match) => {
   const battingTeam = getBattingTeam(match);
   const bowlingTeam = getBowlingTeam(match);
 
-  const isScoreAboveTarget = match.target <= battingTeam.score;
   const isWicketsDown = battingTeam.wickets === battingTeam.players.length - 1;
   const isOverDone = match.overs * 6 === battingTeam.balls;
-
-  if (match.currentStatus.inning === '1st' && (isWicketsDown || isOverDone)) {
+  if (isWicketsDown || isOverDone) {
     match.currentStatus = { battingTeam: bowlingTeam.name, inning: '2nd' };
     match.target = battingTeam.score + 1;
     match.inPlay = {
@@ -69,11 +67,24 @@ const updateMatchStatus = (match) => {
       currentOver: [],
     };
   }
-  if (
-    match.currentStatus.inning === '2nd' &&
-    (isWicketsDown || isOverDone || isScoreAboveTarget)
-  ) {
+};
+
+const updateIsMatchCompleted = (match) => {
+  const battingTeam = getBattingTeam(match);
+
+  const isScoreAboveTarget = match.target <= battingTeam.score;
+  const isWicketsDown = battingTeam.wickets === battingTeam.players.length - 1;
+  const isOverDone = match.overs * 6 === battingTeam.balls;
+  if (isWicketsDown || isOverDone || isScoreAboveTarget) {
     match.isMatchCompleted = true;
+  }
+};
+
+const updateMatchStatus = (match) => {
+  if (match.currentStatus.inning === '1st') {
+    updateInningStatus(match);
+  } else {
+    updateIsMatchCompleted(match);
   }
 };
 
@@ -94,7 +105,6 @@ const updateScore = (matches, matchId, ball) => {
   updateBowlingTeam(extrasRunsLookup, bowlingTeam, ball, match.inPlay.bowler);
   updateInPlayStatus(match, ball);
   updateMatchStatus(match);
-  console.log(match);
 
   return getScoreCard(matches, matchId);
 };

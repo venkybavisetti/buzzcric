@@ -35,7 +35,16 @@ const getScoreCard = (matches, matchId) => {
   const battingTeam = getBattingTeam(match);
   const bowlingTeam = getBowlingTeam(match);
 
-  const { inPlay, target, tossWon, hostingTeam, visitorTeam } = match;
+  const {
+    inPlay,
+    target,
+    tossWon,
+    hostingTeam,
+    visitorTeam,
+    opted,
+    overs,
+    isMatchCompleted,
+  } = match;
   const teams = {
     hostingTeam: hostingTeam.name,
     visitorTeam: visitorTeam.name,
@@ -49,10 +58,20 @@ const getScoreCard = (matches, matchId) => {
 
   return {
     teams,
-    scoreBoard: { team: name, inning, score, wickets, balls, target, tossWon },
+    scoreBoard: {
+      team: name,
+      inning,
+      score,
+      wickets,
+      balls,
+      target,
+      opted,
+      tossWon,
+      overs,
+    },
     inPlay: { batsman, opponentBatsman, bowler },
     currentOver,
-    isMatchCompleted: match.isMatchCompleted,
+    isMatchCompleted,
   };
 };
 

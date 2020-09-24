@@ -35,6 +35,7 @@ const setMatch = ({
   hostingTeam: getTeamInfo(hostingTeam),
   overs: matchDetails.overs,
   tossWon: matchDetails.toss,
+  opted: matchDetails.opted,
   currentStatus: { battingTeam, inning: '1st' },
   inPlay: {
     batsman: null,
