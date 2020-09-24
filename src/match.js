@@ -17,6 +17,7 @@ const getTeamInfo = (team) => {
     batting: { score: 0, balls: 0 },
     bowling: { score: 0, balls: 0, wickets: 0 },
     isBatted: false,
+    isBowled: false,
   }));
   return newTeam;
 };
@@ -76,6 +77,12 @@ const setPlayerBatted = (match, batsmanName) => {
   batsman.isBatted = true;
 };
 
+const setPlayerBowled = (match, bowlerName) => {
+  const bowlingTeam = getBowlingTeam(match);
+  const bowler = getPlayer(bowlingTeam, bowlerName);
+  bowler.isBowled = true;
+};
+
 const updateInPlay = (matches, matchId, playersToUpdate) => {
   let match = getMatch(matches, matchId);
   const { strick, nonStrick, bowler } = playersToUpdate;
@@ -88,7 +95,10 @@ const updateInPlay = (matches, matchId, playersToUpdate) => {
     match.inPlay.opponentBatsman = nonStrick;
     setPlayerBatted(match, nonStrick);
   }
-  if (bowler) match.inPlay.bowler = bowler;
+  if (bowler) {
+    match.inPlay.bowler = bowler;
+    setPlayerBowled(match, bowler);
+  }
   return getScoreCard(matches, matchId);
 };
 
@@ -123,7 +133,7 @@ const filterTeam = (battingTeam, bowlingTeam) => {
     (player) => player.isBatted === false
   );
   const bowledPlayers = bowlingPlayers.filter(
-    (player) => player.bowling.balls > 1
+    (player) => player.isBowled === true
   );
 
   const bowled = bowledPlayers.map((player) => ({
