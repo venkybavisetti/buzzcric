@@ -92,25 +92,6 @@ const updateInPlay = (matches, matchId, playersToUpdate) => {
   return getScoreCard(matches, matchId);
 };
 
-const data = [
-  {
-    hostingTeam: { name: 'csk', score: 200, wickets: 4, balls: 20 },
-    visitorTeam: { name: 'mi', score: 45, wickets: 5, balls: 120 },
-    winner: 'mi',
-    tossWon: 'mi',
-    opted: 'bat',
-    id: 2,
-  },
-  {
-    hostingTeam: { name: 'kkr', score: 220, wickets: 5, balls: 60 },
-    visitorTeam: { name: 'mi', score: 450, wickets: 2, balls: 200 },
-    winner: null,
-    tossWon: 'mi',
-    opted: 'bat',
-    id: 1,
-  },
-];
-
 const matchTeamDetails = (team) => {
   const { name, score, wickets, balls } = team;
   return { name, score, wickets, balls };
@@ -128,9 +109,59 @@ const geMatchesData = (matches) => {
   return matches.map(getMatchDetails);
 };
 
+const mapPlayer = (player) => ({
+  name: player.name,
+  score: player.batting.score,
+  balls: player.batting.balls,
+});
+
+const filterTeam = (battingTeam, bowlingTeam) => {
+  const { name, score, balls, wickets, players } = battingTeam;
+  const bowlingPlayers = bowlingTeam.players;
+  const battedPlayers = players.filter((player) => player.isBatted === true);
+  const notBattedPlayers = players.filter(
+    (player) => player.isBatted === false
+  );
+  const bowledPlayers = bowlingPlayers.filter(
+    (player) => player.bowling.balls > 1
+  );
+
+  const bowled = bowledPlayers.map((player) => ({
+    name: player.name,
+    score: player.bowling.score,
+    balls: player.bowling.balls,
+    wickets: player.bowling.wickets,
+  }));
+  const batted = battedPlayers.map(mapPlayer);
+  const notBatted = notBattedPlayers.map(mapPlayer);
+  return { batted, bowled, notBatted, name, score, balls, wickets };
+};
+
+const getMatchScoreBoard = (matches, matchId) => {
+  let match = getMatch(matches, matchId);
+  const battingTeamPlayers = getBattingTeam(match);
+  const bowlingTeamPlayers = getBowlingTeam(match);
+  const { winner, tossWon, opted, overs, target } = match;
+  const battingTeam = filterTeam(battingTeamPlayers, bowlingTeamPlayers);
+  const bowlingTeam = filterTeam(bowlingTeamPlayers, battingTeamPlayers);
+  return {
+    battingTeam,
+    bowlingTeam,
+    inning: match.currentStatus.inning,
+    winner,
+    tossWon,
+    opted,
+    target,
+    overs,
+    balls: battingTeam.balls,
+    score: battingTeam.score,
+  };
+};
+
 module.exports = {
   geMatchesData,
   setMatch,
   getPlayersToChoose,
   updateInPlay,
+  getMatchScoreBoard,
 };

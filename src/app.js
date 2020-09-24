@@ -11,6 +11,7 @@ const {
   updateInPP,
   updateScoreCard,
   getMatches,
+  getScoreBoard,
 } = require('./handlers');
 
 const url = process.env.REDIS_URL || '6379';
@@ -32,5 +33,6 @@ app.post('/api/updateScore/:matchId', updateScoreCard);
 app.get('/api/getInPlay/:matchId', getInPlay);
 app.get('/api/choosePlayers/:matchId', choosePlayers);
 app.get('/api/getMatches', getMatches);
+app.get('/api/scoreBoard/:matchId', getScoreBoard);
 
 module.exports = { app };

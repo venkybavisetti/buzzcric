@@ -4,6 +4,7 @@ const {
   getPlayersToChoose,
   updateInPlay,
   geMatchesData,
+  getMatchScoreBoard,
 } = require('./match');
 const { updateScore } = require('./updateScore');
 const { getBattingTeamName, getScoreCard } = require('./utilities');
@@ -73,7 +74,15 @@ const getMatches = (req, res) => {
   res.json(matchesData);
 };
 
+const getScoreBoard = (req, res) => {
+  const { matchId } = req.params;
+  const { matches } = req.app.locals;
+  const matchData = getMatchScoreBoard(matches, +matchId);
+  res.json(matchData);
+};
+
 module.exports = {
+  getScoreBoard,
   setupMatch,
   loadData,
   getInPlay,
