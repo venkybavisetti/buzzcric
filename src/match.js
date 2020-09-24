@@ -29,8 +29,8 @@ const setMatch = ({
   matchId,
 }) => ({
   matchId: matchId,
-  isMatchCompleted: false,
   target: 0,
+  winner: null,
   visitorTeam: getTeamInfo(visitorTeam),
   hostingTeam: getTeamInfo(hostingTeam),
   overs: matchDetails.overs,
@@ -92,7 +92,44 @@ const updateInPlay = (matches, matchId, playersToUpdate) => {
   return getScoreCard(matches, matchId);
 };
 
+const data = [
+  {
+    hostingTeam: { name: 'csk', score: 200, wickets: 4, balls: 20 },
+    visitorTeam: { name: 'mi', score: 45, wickets: 5, balls: 120 },
+    winner: 'mi',
+    tossWon: 'mi',
+    opted: 'bat',
+    id: 2,
+  },
+  {
+    hostingTeam: { name: 'kkr', score: 220, wickets: 5, balls: 60 },
+    visitorTeam: { name: 'mi', score: 450, wickets: 2, balls: 200 },
+    winner: null,
+    tossWon: 'mi',
+    opted: 'bat',
+    id: 1,
+  },
+];
+
+const matchTeamDetails = (team) => {
+  const { name, score, wickets, balls } = team;
+  return { name, score, wickets, balls };
+};
+
+const getMatchDetails = (match) => {
+  const { winner, tossWon, opted, matchId } = match;
+  const matchInfo = { winner, tossWon, opted, id: matchId };
+  matchInfo.visitorTeam = matchTeamDetails(match.visitorTeam);
+  matchInfo.hostingTeam = matchTeamDetails(match.hostingTeam);
+  return matchInfo;
+};
+
+const geMatchesData = (matches) => {
+  return matches.map(getMatchDetails);
+};
+
 module.exports = {
+  geMatchesData,
   setMatch,
   getPlayersToChoose,
   updateInPlay,

@@ -1,4 +1,10 @@
-const { setMatch, getPlayersToChoose, updateInPlay } = require('./match');
+const match = require('./match');
+const {
+  setMatch,
+  getPlayersToChoose,
+  updateInPlay,
+  geMatchesData,
+} = require('./match');
 const { updateScore } = require('./updateScore');
 const { getBattingTeamName, getScoreCard } = require('./utilities');
 
@@ -61,6 +67,12 @@ const updateScoreCard = (req, res) => {
   db.saveData(matches).then((status) => status && res.json(newScoreBoard));
 };
 
+const getMatches = (req, res) => {
+  const { matches, db } = req.app.locals;
+  const matchesData = geMatchesData(matches);
+  res.json(matchesData);
+};
+
 module.exports = {
   setupMatch,
   loadData,
@@ -68,4 +80,5 @@ module.exports = {
   choosePlayers,
   updateInPP,
   updateScoreCard,
+  getMatches,
 };

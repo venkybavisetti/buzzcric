@@ -43,7 +43,7 @@ const getScoreCard = (matches, matchId) => {
     visitorTeam,
     opted,
     overs,
-    isMatchCompleted,
+    winner,
   } = match;
   const teams = {
     hostingTeam: hostingTeam.name,
@@ -71,7 +71,7 @@ const getScoreCard = (matches, matchId) => {
     },
     inPlay: { batsman, opponentBatsman, bowler },
     currentOver,
-    isMatchCompleted,
+    winner,
   };
 };
 

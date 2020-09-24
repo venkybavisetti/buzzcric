@@ -71,13 +71,15 @@ const updateInningStatus = (match) => {
 
 const updateIsMatchCompleted = (match) => {
   const battingTeam = getBattingTeam(match);
+  const bowlingTeam = getBowlingTeam(match);
 
   const isScoreAboveTarget = match.target <= battingTeam.score;
   const isWicketsDown = battingTeam.wickets === battingTeam.players.length - 1;
   const isOverDone = match.overs * 6 === battingTeam.balls;
-  if (isWicketsDown || isOverDone || isScoreAboveTarget) {
-    match.isMatchCompleted = true;
+  if (isWicketsDown || isOverDone) {
+    match.winner = bowlingTeam.name;
   }
+  if (isScoreAboveTarget) match.winner = bowlingTeam.name;
 };
 
 const updateMatchStatus = (match) => {
