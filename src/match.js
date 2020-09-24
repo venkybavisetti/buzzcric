@@ -108,10 +108,23 @@ const matchTeamDetails = (team) => {
 };
 
 const getMatchDetails = (match) => {
-  const { winner, tossWon, opted, matchId } = match;
-  const matchInfo = { winner, tossWon, opted, id: matchId };
+  const { score, balls } = getBattingTeam(match);
+  const { winner, tossWon, opted, matchId, inning, target, overs } = match;
+
+  const matchInfo = {
+    winner,
+    tossWon,
+    opted,
+    inning,
+    target,
+    overs,
+    score,
+    balls,
+    id: matchId,
+  };
   matchInfo.visitorTeam = matchTeamDetails(match.visitorTeam);
   matchInfo.hostingTeam = matchTeamDetails(match.hostingTeam);
+
   return matchInfo;
 };
 
@@ -165,6 +178,7 @@ const getMatchScoreBoard = (matches, matchId) => {
     overs,
     balls: battingTeam.balls,
     score: battingTeam.score,
+    inPlay: match.inPlay,
   };
 };
 
