@@ -109,13 +109,12 @@ const matchTeamDetails = (team) => {
 
 const getMatchDetails = (match) => {
   const { score, balls } = getBattingTeam(match);
-  const { winner, tossWon, opted, matchId, inning, target, overs } = match;
-
+  const { winner, tossWon, opted, matchId, target, overs } = match;
   const matchInfo = {
     winner,
     tossWon,
     opted,
-    inning,
+    inning: match.currentStatus.inning,
     target,
     overs,
     score,

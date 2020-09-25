@@ -79,7 +79,7 @@ const updateIsMatchCompleted = (match) => {
   if (isWicketsDown || isOverDone) {
     match.winner = bowlingTeam.name;
   }
-  if (isScoreAboveTarget) match.winner = bowlingTeam.name;
+  if (isScoreAboveTarget) match.winner = battingTeam.name;
 };
 
 const updateMatchStatus = (match) => {
