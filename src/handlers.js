@@ -1,3 +1,5 @@
+const axios = require('axios');
+const app = require('./app');
 const match = require('./match');
 const {
   setMatch,
@@ -81,6 +83,54 @@ const getScoreBoard = (req, res) => {
   res.json(matchData);
 };
 
+const checkAuthentication = (req, res, next) => {
+  if (req.session.isNew) {
+    return res.redirect(req.app.locals.REACT_HOME_PAGE_URL);
+  }
+  next();
+};
+
+const getUserDetails = (req, res) => {
+  const code = req.query.code;
+  const headers = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    Accept: 'application/json',
+  };
+  axios
+    .post(
+      `https://github.com/login/oauth/access_token?client_id=${req.app.locals.CLIENT_ID}&client_secret=${req.app.locals.CLIENT_SECRET}&code=${code}`,
+      { headers }
+    )
+    .then((response) => {
+      let [access_token] = response.data.split('&');
+      access_token = access_token.split('=')[1];
+      const headers = { Authorization: `token ${access_token}` };
+      axios.get(`https://api.github.com/user`, { headers }).then((resp2) => {
+        const { id, login, avatar_url } = resp2.data;
+        req.session.id = id;
+        req.session.username = login;
+        req.session.avatar_url = avatar_url;
+
+        req.app.locals.db.addUser({
+          id,
+          name: login,
+          img: avatar_url,
+        });
+        res.redirect(req.app.locals.REACT_HOME_PAGE_URL);
+      });
+    });
+};
+
+const authenticate = (req, res) => {
+  res.redirect(
+    `https://github.com/login/oauth/authorize?client_id=${req.app.locals.CLIENT_ID}`
+  );
+};
+
+const getUser = (req, res) => {
+  req.app.locals.db.getUser(req.session.id).then((data) => res.json(data));
+};
+
 module.exports = {
   getScoreBoard,
   setupMatch,
@@ -90,4 +140,8 @@ module.exports = {
   updateInPP,
   updateScoreCard,
   getMatches,
+  checkAuthentication,
+  getUserDetails,
+  authenticate,
+  getUser,
 };

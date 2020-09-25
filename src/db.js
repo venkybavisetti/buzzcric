@@ -16,6 +16,23 @@ class DB {
       );
     });
   }
+
+  addUser({ id, name, img }) {
+    return new Promise((resolve, reject) => {
+      this.client.hmset(id, { id, name, img }, (err, res) => {
+        resolve(true);
+      });
+    });
+  }
+
+  getUser(id) {
+    return new Promise((resolve, reject) => {
+      this.client.hgetall(id, (err, res) => {
+        if (err) resolve({});
+        resolve(res);
+      });
+    });
+  }
 }
 
 module.exports = { DB };

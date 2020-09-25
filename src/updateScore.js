@@ -26,6 +26,9 @@ const updateBowlingTeam = (lookup, team, ball, bowlerName) => {
   if (extras === 'wk') bowler.bowling.wickets += 1;
 };
 
+const isFirstBallWithWide = (inPlay) =>
+  ['wd', 'nb'].some((el) => inPlay.currentOver.slice(-1)[0].includes(el));
+
 const updateInPlayStatus = (match, ball) => {
   let { inPlay } = match;
   let bowlingTeam = getBowlingTeam(match);
@@ -35,7 +38,7 @@ const updateInPlayStatus = (match, ball) => {
   inPlay.currentOver.push(ball);
 
   if (extras === 'wk') inPlay.batsman = null;
-  if (bowler.bowling.balls % 6 === 0) {
+  if (bowler.bowling.balls % 6 === 0 && !isFirstBallWithWide(inPlay)) {
     inPlay.currentOver = [];
     inPlay.bowler = null;
     let playerName = inPlay.batsman;
