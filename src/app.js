@@ -26,6 +26,7 @@ app.use(express.json());
 app.use('/todo', express.static('build'));
 app.use(express.static('build'));
 app.use(loadData);
+app.use(express.static('public'));
 
 app.post('/api/setupMatch', setupMatch);
 app.post('/api/updateInPP/:matchId', updateInPP);
