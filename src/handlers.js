@@ -7,6 +7,7 @@ const {
   updateInPlay,
   geMatchesData,
   getMatchScoreBoard,
+  isOwner,
 } = require('./match');
 const { updateScore } = require('./updateScore');
 const { getBattingTeamName, getScoreCard } = require('./utilities');
@@ -27,11 +28,14 @@ const setupMatch = (req, res) => {
     matchInfo.matchDetails
   );
 
-  const match = setMatch({
-    ...matchInfo,
-    battingTeam,
-    matchId: matches.length,
-  });
+  const match = setMatch(
+    {
+      ...matchInfo,
+      battingTeam,
+      matchId: matches.length,
+    },
+    req.session
+  );
 
   matches.unshift(match);
   db.saveData(matches).then(
@@ -77,15 +81,17 @@ const getMatches = (req, res) => {
 };
 
 const getScoreBoard = (req, res) => {
-  const { matchId } = req.params;
+  const { id } = req.params;
   const { matches } = req.app.locals;
-  const matchData = getMatchScoreBoard(matches, +matchId);
+  const matchData = getMatchScoreBoard(matches, +id);
   res.json(matchData);
 };
 
 const checkAuthentication = (req, res, next) => {
   if (req.session.isNew) {
-    return res.redirect(req.app.locals.REACT_HOME_PAGE_URL);
+    res.status(403);
+    res.json({ message: 'unauthorize resource' });
+    return;
   }
   next();
 };
@@ -131,6 +137,23 @@ const getUser = (req, res) => {
   req.app.locals.db.getUser(req.session.id).then((data) => res.json(data));
 };
 
+const setUserLogout = (req, res) => {
+  req.session = null;
+  res.json({ status: true });
+};
+
+const checkOwner = (req, res, next, matchId) => {
+  const { matches } = req.app.locals;
+  const owner = isOwner(matches, +matchId, req.session.id);
+
+  if (!owner) {
+    res.status(403);
+    return res.json({ message: 'unauthorize resource' });
+  }
+
+  next();
+};
+
 module.exports = {
   getScoreBoard,
   setupMatch,
@@ -144,4 +167,6 @@ module.exports = {
   getUserDetails,
   authenticate,
   getUser,
+  setUserLogout,
+  checkOwner,
 };

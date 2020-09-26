@@ -22,13 +22,11 @@ const getTeamInfo = (team) => {
   return newTeam;
 };
 
-const setMatch = ({
-  visitorTeam,
-  hostingTeam,
-  matchDetails,
-  battingTeam,
-  matchId,
-}) => ({
+const setMatch = (
+  { visitorTeam, hostingTeam, matchDetails, battingTeam, matchId },
+  user
+) => ({
+  userId: user.id,
   matchId: matchId,
   target: 0,
   winner: null,
@@ -181,10 +179,16 @@ const getMatchScoreBoard = (matches, matchId) => {
   };
 };
 
+const isOwner = (matches, matchId, userId) => {
+  const match = getMatch(matches, matchId);
+  return match.userId === userId;
+};
+
 module.exports = {
   geMatchesData,
   setMatch,
   getPlayersToChoose,
   updateInPlay,
   getMatchScoreBoard,
+  isOwner,
 };

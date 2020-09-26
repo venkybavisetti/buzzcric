@@ -23,6 +23,8 @@ const {
   getUserDetails,
   authenticate,
   getUser,
+  setUserLogout,
+  checkOwner,
 } = require('./handlers');
 
 const url = process.env.REDIS_URL || '6379';
@@ -44,17 +46,19 @@ app.use((...args) => app.get('sessionMiddleware')(...args));
 app.use(loadData);
 app.use(express.static('public'));
 
+app.get('/api/scoreBoard/:id', getScoreBoard);
 app.get('/api/getMatches', getMatches);
-app.get('/api/scoreBoard/:matchId', getScoreBoard);
-app.get('/api/getUser', getUser);
 
+app.get('/api/getUser', getUser);
 app.get('/api/authenticate', authenticate);
 app.get('/callback', getUserDetails);
 app.use(checkAuthentication);
 
+app.post('/api/logout', setUserLogout);
+app.post('/api/setupMatch', setupMatch);
+app.param('matchId', checkOwner);
 app.get('/api/getInPlay/:matchId', getInPlay);
 app.get('/api/choosePlayers/:matchId', choosePlayers);
-app.post('/api/setupMatch', setupMatch);
 app.post('/api/updateInPP/:matchId', updateInPP);
 app.post('/api/updateScore/:matchId', updateScoreCard);
 
