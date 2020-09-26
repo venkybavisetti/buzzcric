@@ -157,11 +157,11 @@ const filterTeam = (battingTeam, bowlingTeam) => {
   return { batted, bowled, notBatted, name, score, balls, wickets };
 };
 
-const getMatchScoreBoard = (matches, matchId) => {
-  let match = getMatch(matches, matchId);
+const getMatchScoreBoard = (matches, id) => {
+  let match = getMatch(matches, id);
   const battingTeamPlayers = getBattingTeam(match);
   const bowlingTeamPlayers = getBowlingTeam(match);
-  const { winner, tossWon, opted, overs, target } = match;
+  const { winner, tossWon, opted, overs, target, userId, matchId } = match;
   const battingTeam = filterTeam(battingTeamPlayers, bowlingTeamPlayers);
   const bowlingTeam = filterTeam(bowlingTeamPlayers, battingTeamPlayers);
   return {
@@ -176,6 +176,8 @@ const getMatchScoreBoard = (matches, matchId) => {
     balls: battingTeam.balls,
     score: battingTeam.score,
     inPlay: match.inPlay,
+    userId,
+    matchId,
   };
 };
 
