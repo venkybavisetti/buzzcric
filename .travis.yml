@@ -12,7 +12,8 @@ jobs:
   include:
     - stage: Deploy
       script:
-        - './scripts/build.sh'
+        - 'pwd'
+        - ./scripts/build.sh
       deploy:
         provider: heroku
         api_key:
@@ -20,5 +21,3 @@ jobs:
         skip_cleanup: true
         app: buzzcric
         run: restart
-deploy:
-  api_key:
