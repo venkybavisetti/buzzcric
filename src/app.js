@@ -38,6 +38,7 @@ app.locals.REACT_HOME_PAGE_URL = REACT_HOME_PAGE_URL;
 app.locals.db = db;
 
 app.set('sessionMiddleware', session({ secret: SECRET_MSG }));
+
 app.use(morgan('dev'));
 app.use(express.json());
 app.use((...args) => app.get('sessionMiddleware')(...args));
