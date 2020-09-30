@@ -1,4 +1,3 @@
-const { setupMaster } = require('cluster');
 const express = require('express');
 const morgan = require('morgan');
 const redis = require('redis');

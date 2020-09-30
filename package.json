@@ -18,10 +18,8 @@
     "url": "https://github.com/venkybavisetti/buzzcric/issues"
   },
   "homepage": "https://github.com/venkybavisetti/buzzcric#readme",
-  "devDependencies": {
-    "express": "^4.17.1"
-  },
   "dependencies": {
+    "express": "^4.17.1",
     "axios": "^0.20.0",
     "cookie-session": "^1.4.0",
     "morgan": "^1.10.0",
