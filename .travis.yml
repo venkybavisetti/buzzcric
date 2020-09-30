@@ -12,7 +12,6 @@ jobs:
   include:
     - stage: Deploy
       script:
-        - ls scripts
         - ./scripts/build.sh
       deploy:
         provider: heroku
