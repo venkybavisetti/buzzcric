@@ -40,10 +40,9 @@ app.locals.db = db;
 app.set('sessionMiddleware', session({ secret: SECRET_MSG }));
 app.use(morgan('dev'));
 app.use(express.json());
-app.use('/todo', express.static('build'));
 app.use((...args) => app.get('sessionMiddleware')(...args));
 app.use(loadData);
-app.use(express.static('public'));
+app.use(express.static('build'));
 
 app.get('/api/scoreBoard/:id', getScoreBoard);
 app.get('/api/getMatches', getMatches);
