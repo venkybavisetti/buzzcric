@@ -12,7 +12,7 @@ jobs:
   include:
     - stage: Deploy
       script:
-        - 'pwd'
+        - ls scripts
         - ./scripts/build.sh
       deploy:
         provider: heroku
