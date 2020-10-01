@@ -24,6 +24,7 @@ const {
   getUser,
   setUserLogout,
   checkOwner,
+  getAllUsers,
 } = require('./handlers');
 
 const url = process.env.REDIS_URL || '6379';
@@ -53,6 +54,7 @@ app.get('/api/authenticate', authenticate);
 app.get('/callback', getUserDetails);
 app.use(checkAuthentication);
 
+app.get('/api/getAllUsers', getAllUsers);
 app.post('/api/logout', setUserLogout);
 app.post('/api/setupMatch', setupMatch);
 app.param('matchId', checkOwner);

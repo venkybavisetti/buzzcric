@@ -33,6 +33,15 @@ class DB {
       });
     });
   }
+
+  getAllUsers() {
+    return new Promise((resolve, reject) => {
+      this.client.keys('*', (err, res) => {
+        if (err) resolve({});
+        resolve(res);
+      });
+    });
+  }
 }
 
 module.exports = { DB };

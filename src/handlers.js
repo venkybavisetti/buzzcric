@@ -154,6 +154,10 @@ const checkOwner = (req, res, next, matchId) => {
   next();
 };
 
+const getAllUsers = (req, res) => {
+  req.app.locals.db.getAllUsers().then((data) => res.json(data));
+};
+
 module.exports = {
   getScoreBoard,
   setupMatch,
@@ -169,4 +173,5 @@ module.exports = {
   getUser,
   setUserLogout,
   checkOwner,
+  getAllUsers,
 };
