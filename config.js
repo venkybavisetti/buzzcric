@@ -1,4 +1,4 @@
-require('dotenv').config();
+// require('dotenv').config();
 
 module.exports = {
   CLIENT_ID: process.env.CLIENT_ID,
